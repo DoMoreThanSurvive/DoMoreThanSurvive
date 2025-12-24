@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thrive Guides - Expert Health Resources</title>
+    <meta name="description" content="Comprehensive guides for navigating complex health conditions with confidence.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #0a1628;
+            color: #ffffff;
+            padding-top: 80px;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0a1628 0%, #1a2f4a 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .triangle-logo {
+            width: 60px;
+            height: 60px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        }
+        
+        .nav-logo-triangle {
+            width: 32px;
+            height: 32px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        }
+        
+        /* Navigation Styles */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 22, 40, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-bar.scrolled {
+            background: rgba(10, 22, 40, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #60a5fa;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            transition: width 0.4s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Animated Background Glows */
+        .glow-orb {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.12;
+            animation: float 25s infinite ease-in-out;
+        }
+        
+        .glow-orb-1 {
+            width: 600px;
+            height: 300px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            top: 10%;
+            right: 5%;
+            animation-delay: 0s;
+        }
+        
+        .glow-orb-2 {
+            width: 500px;
+            height: 250px;
+            background: linear-gradient(225deg, #06b6d4 0%, #0284c7 100%);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            bottom: 15%;
+            left: 0%;
+            animation-delay: -12s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            33% {
+                transform: translate(-40px, -40px) rotate(5deg) scale(1.05);
+            }
+            66% {
+                transform: translate(40px, 30px) rotate(-5deg) scale(0.95);
+            }
+        }
+        
+        /* Guide Card Styles */
+        .guide-card {
+            background: rgba(15, 28, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        
+        .guide-preview {
+            background: #0f1c2d;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .guide-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+        }
+        
+        .buy-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .buy-btn:hover {
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="gradient-bg">
+    <!-- Animated Background Glows -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none" style="z-index: 0;">
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+    </div>
+    
+    <!-- Navigation Bar -->
+    <nav class="nav-bar" style="position: fixed; z-index: 1000;">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div class="nav-logo-triangle"></div>
+                    <div class="text-left">
+                        <span class="text-lg font-bold tracking-tight leading-tight block">THRIVE</span>
+                        <span class="text-lg font-bold tracking-tight leading-tight block">WELLNESS</span>
+                    </div>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden sm:flex items-center gap-8">
+                    <a href="/#about" class="nav-link text-sm font-medium">About Us</a>
+                    <a href="/thrive-guides" class="nav-link text-sm font-medium">Buy Guides</a>
+                    <a href="/#contact" class="nav-link text-sm font-medium">Get Help</a>
+                    <a href="#login" class="px-6 py-2 border border-blue-500/50 text-blue-400 rounded-full text-sm font-semibold hover:bg-blue-500/10 transition-all">
+                        Log In
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="sm:hidden text-gray-400 hover:text-blue-400 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden sm:hidden pt-4 pb-2">
+                <div class="flex flex-col gap-4">
+                    <a href="/#about" class="nav-link text-sm font-medium py-2">About Us</a>
+                    <a href="/thrive-guides" class="nav-link text-sm font-medium py-2">Buy Guides</a>
+                    <a href="/#contact" class="nav-link text-sm font-medium py-2">Get Help</a>
+                    <a href="#login" class="px-6 py-2 border border-blue-500/50 text-blue-400 rounded-full text-sm font-semibold hover:bg-blue-500/10 transition-all text-center">
+                        Log In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-18 px-6 fade-in" style="position: relative; z-index: 1;">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="flex justify-center mb-6">
+                <div class="triangle-logo" style="width: 60px; height: 60px;"></div>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold mb-4">
+                <span class="text-gradient">Thrive Guides</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+                Easy-to-read guides<br>
+                Navigate complex health conditions
+            </p>
+        </div>
+    </section>
+
+    <!-- Guides Grid -->
+    <section class="py-16 px-6" style="position: relative; z-index: 1;">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Guide 1: Safer Apartment Checklist -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Safer Apartment Checklist</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">What to Check Before Signing a Lease</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Walk into your inspection with confidence—know what to look for
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Who is This Guide For?</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                This guide helps you confidently walk into and inspect options for new or safer housing. Learn how to spot signs that there has been, is, or likely will be toxic mold or microbial growth in a unit before you sign a lease.
+                            </p>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            When you've been dealing with mold illness, <span class="font-bold text-white">the last thing you need is to move into another contaminated space</span>. This checklist walks you through exactly where to look, what to look for, and how to work with property management without labeling yourself a "problem tenant."
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-blue-400">$19</span>
+                            <span class="text-sm text-gray-400">PDF Download</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY NOW
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guide 2: Placeholder -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Lyme Disease Toolkit</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">Navigate Testing & Treatment Options</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Cut through the confusion and take control of your diagnosis
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Who is This Guide For?</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                Whether you're newly diagnosed or have been dealing with Lyme for years, this toolkit provides clear guidance on testing accuracy, treatment protocols, and how to work effectively with medical professionals.
+                            </p>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Understanding Lyme disease requires navigating conflicting information from doctors, insurance companies, and online sources. This guide distills <span class="font-bold text-white">evidence-based approaches</span> into actionable steps you can take today.
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-blue-400">$29</span>
+                            <span class="text-sm text-gray-400">PDF Download</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY NOW
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guide 3: Placeholder -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">EBV Recovery Protocol</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">Managing Epstein-Barr Virus</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Evidence-based strategies for symptom management and recovery
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Who is This Guide For?</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                For anyone dealing with chronic EBV reactivation, this protocol offers practical steps to support your immune system, manage fatigue, and understand your lab results.
+                            </p>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Epstein-Barr virus affects millions, yet most doctors offer little beyond "rest and wait." This guide provides <span class="font-bold text-white">specific interventions</span> backed by current research and clinical experience.
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-blue-400">$24</span>
+                            <span class="text-sm text-gray-400">PDF Download</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY NOW
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guide 4: Placeholder -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Mold Exposure Guide</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">Detection, Testing & Remediation</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Protect your health with comprehensive mold strategies
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Who is This Guide For?</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                Essential for anyone suspecting mold exposure. Learn which tests actually matter, how to interpret results, and what remediation really requires—without getting scammed.
+                            </p>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Mold illness is real, but the industry is full of opportunists. This guide helps you <span class="font-bold text-white">make informed decisions</span> about testing, treatment, and whether remediation is truly necessary.
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-blue-400">$34</span>
+                            <span class="text-sm text-gray-400">PDF Download</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY NOW
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guide 5: Placeholder -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">MG Management Manual</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">Living with Myasthenia Gravis</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Practical strategies for symptom control and quality of life
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Who is This Guide For?</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                For those navigating the challenges of Myasthenia Gravis. This manual covers medication management, crisis prevention, and daily strategies to maintain independence and energy.
+                            </p>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            MG requires constant vigilance and adjustment. Learn from <span class="font-bold text-white">lived experience</span> about what actually works for managing symptoms, working with specialists, and planning for flares.
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-blue-400">$27</span>
+                            <span class="text-sm text-gray-400">PDF Download</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY NOW
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Guide 6: Placeholder -->
+                <div class="guide-card">
+                    <div class="guide-preview">
+                        <div class="flex justify-center mb-6">
+                            <div class="triangle-logo" style="width: 48px; height: 48px;"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 text-center">Complete Bundle</h3>
+                        <p class="text-blue-400 text-lg mb-4 text-center">All Guides Included</p>
+                        <p class="text-gray-400 text-sm italic mb-6 text-center">
+                            Get every guide at a significant discount
+                        </p>
+                        
+                        <div class="bg-blue-950/30 rounded-lg p-6 border border-blue-500/20 mb-4">
+                            <h4 class="text-blue-400 text-xl font-semibold mb-4">Complete Resource Library</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed mb-3">
+                                Access all current and future guides with this comprehensive bundle. Perfect for anyone dealing with multiple conditions or looking for complete coverage.
+                            </p>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>✓ All 6 current guides</li>
+                                <li>✓ Future guide updates</li>
+                                <li>✓ Bonus resources</li>
+                            </ul>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Save over 40% compared to buying individually. <span class="font-bold text-white">Everything you need</span> to navigate complex health challenges with confidence.
+                        </p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <span class="text-2xl font-bold text-blue-400">$99</span>
+                                <span class="text-sm text-gray-400 line-through ml-2">$175</span>
+                            </div>
+                            <span class="text-sm text-green-400 font-semibold">Save 43%</span>
+                        </div>
+                        <a href="#" class="buy-btn block w-full py-4 rounded-full text-center font-semibold text-white">
+                            BUY BUNDLE
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="relative py-20 px-6 overflow-hidden mt-16">
+        <!-- Gradient Background -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/20 to-blue-900/30"></div>
+        
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        
+        <div class="relative max-w-6xl mx-auto">
+            <!-- Main Footer Content -->
+            <div class="grid md:grid-cols-2 gap-16 mb-16">
+                <!-- Left Column - Branding -->
+                <div>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="triangle-logo" style="width: 50px; height: 50px;"></div>
+                        <div>
+                            <h3 class="text-2xl font-bold tracking-tight">THRIVE<br>WELLNESS</h3>
+                        </div>
+                    </div>
+                    <p class="text-xl text-gray-300 mb-6 font-light">
+                        Expert Health Consultants.
+                    </p>
+                    <p class="text-blue-400 text-lg font-semibold mb-8">
+                        Do More Than Survive.
+                    </p>
+                    
+                    <!-- Contact Info -->
+                    <div class="space-y-3">
+                        <p class="text-blue-400">
+                            <a href="mailto:contact@domorethansurvive.com" class="hover:text-blue-300 transition-colors flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                contact@domorethansurvive.com
+                            </a>
+                        </p>
+                        <p class="text-blue-400">
+                            <a href="tel:+17163014040" class="hover:text-blue-300 transition-colors flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1
