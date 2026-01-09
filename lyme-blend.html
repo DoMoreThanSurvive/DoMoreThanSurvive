@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparing Your Custom Lyme Blend...</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+  .loader-container {
+    text-align: center;
+    padding: 2rem;
+  }
+  .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid white;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+<div class="loader-container">
+  <div class="spinner"></div>
+  <h1>Preparing Your Custom Lyme Blend</h1>
+  <p>Selecting the herbs from the [Lyme + Coinfections] blend Danny uses and recommends...</p>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  const CONFIG = {
+    productUrl: 'https://apexbotanicals.com/product/custom-blended-tincture/',
+    refCode: '3903',
+    herbs: {
+      herb1: 'Cryptolepis',
+      herb2: 'Japanese Knotweed',
+      herb3: 'Wormwood',
+      herb4: "Cat's Claw"
+    }
+  };
+
+  // Build product URL with ref parameter for affiliate tracking
+  const productWithRef = `${CONFIG.productUrl}?ref=${CONFIG.refCode}`;
+  
+  // Check if we're already on the Apex product page
+  const isOnApexProduct = window.location.href.includes('apexbotanicals.com/product/custom-blended-tincture/');
+
+  if (!isOnApexProduct) {
+    // Redirect to product page with affiliate ref code
+    // The ref parameter sets the tracking cookie when page loads
+    setTimeout(() => {
+      window.location.href = productWithRef;
+    }, 500);
+  } else {
+    // We're on the product page - autofill the herbs
+    
+    // Helper function to wait for element to appear
+    function waitForElement(selector, timeout = 10000) {
+      return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        
+        const checkElement = () => {
+          const element = document.querySelector(selector);
+          
+          if (element) {
+            resolve(element);
+          } else if (Date.now() - startTime > timeout) {
+            reject(new Error(`Timeout waiting for ${selector}`));
+          } else {
+            setTimeout(checkElement, 200);
+          }
+        };
+        
+        checkElement();
+      });
+    }
+
+    // Wait for page to fully load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', autofillHerbs);
+    } else {
+      autofillHerbs();
+    }
+
+    async function autofillHerbs() {
+      try {
+        // Wait for the first herb dropdown to appear
+        await waitForElement('select[name="herb1"]');
+        
+        // Small delay to ensure all dropdowns are ready
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Autofill each herb selection
+        Object.entries(CONFIG.herbs).forEach(([fieldName, herbValue]) => {
+          const selectElement = document.querySelector(`select[name="${fieldName}"]`);
+          
+          if (selectElement) {
+            // Find the option that matches our herb value
+            const options = Array.from(selectElement.options);
+            const matchingOption = options.find(opt => 
+              opt.value.toLowerCase().includes(herbValue.toLowerCase()) ||
+              opt.text.toLowerCase().includes(herbValue.toLowerCase())
+            );
+
+            if (matchingOption) {
+              selectElement.value = matchingOption.value;
+              
+              // Trigger change event in case the form has listeners
+              const changeEvent = new Event('change', { bubbles: true });
+              selectElement.dispatchEvent(changeEvent);
+              
+              console.log(`✓ Set ${fieldName} to ${herbValue}`);
+            } else {
+              console.warn(`⚠ Could not find option for ${herbValue} in ${fieldName}`);
+            }
+          } else {
+            console.warn(`⚠ Could not find select element: ${fieldName}`);
+          }
+        });
+
+        console.log('✓ Herb autofill complete');
+        
+      } catch (error) {
+        console.warn('Autofill encountered an issue:', error.message);
+        // Fail silently - user can still manually select herbs
+      }
+    }
+  }
+})();
+</script>
+</body>
+</html>
