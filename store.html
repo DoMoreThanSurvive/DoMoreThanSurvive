@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store - Do More Than Survive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.4;
+        }
+
+        .voice-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            border-bottom: 2px solid #FF9500;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .voice-bar:hover {
+            background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+        }
+
+        .voice-bar.active {
+            background: linear-gradient(135deg, #2a4a2a 0%, #1a3a1a 100%);
+        }
+
+        .voice-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .mic-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #FF9500;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+
+        .voice-bar:hover .mic-button {
+            transform: scale(1.05);
+        }
+
+        .voice-bar.listening .mic-button {
+            animation: pulse 1.5s ease-in-out infinite;
+            background: #4ecca3;
+        }
+
+        .voice-bar.processing .mic-button {
+            background: #ffd700;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .mic-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .voice-instructions {
+            text-align: center;
+        }
+
+        .voice-instructions h3 {
+            font-size: 0.95rem;
+            color: #FF9500;
+            margin-bottom: 0.15rem;
+            font-weight: 600;
+        }
+
+        .voice-instructions p {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .voice-status {
+            padding: 0.35rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .voice-status.ready { color: #FF9500; }
+        .voice-status.listening { color: #ffd700; }
+        .voice-status.processing { color: #ffcc00; }
+        .voice-status.error { color: #ff6b6b; }
+
+        .store-header {
+            background: #1a1a1a;
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .store-header-content {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .store-title {
+            font-size: 1.75rem;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .store-subtitle {
+            color: #999;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+        }
+
+        .list-section {
+            background: #1a1a1a;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            scroll-margin-top: 120px;
+        }
+
+        .list-header {
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .list-title {
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            margin-bottom: 0.35rem;
+            font-weight: 700;
+        }
+
+        .list-description {
+            color: #999;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .product-card {
+            background: #252525;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 16px rgba(255, 149, 0, 0.3);
+            border-color: #FF9500;
+            transform: translateY(-2px);
+        }
+
+        .product-image-container {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
+
+        .product-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-placeholder {
+            color: #666;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .product-info {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .stars {
+            color: #ff9900;
+        }
+
+        .rating-count {
+            color: #FF9500;
+        }
+
+        .product-why {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .product-actions {
+            margin-top: auto;
+        }
+
+        .add-to-cart-btn {
+            display: block;
+            width: 100%;
+            padding: 0.7rem;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            border: 1px solid #a88734;
+            border-radius: 8px;
+            color: #111;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 0 rgba(255,255,255,.4) inset;
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(to bottom, #f5d78e, #edb933);
+            border-color: #9c7e31;
+        }
+
+        .add-to-cart-btn:active {
+            background: #f0c14b;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .alternatives {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #333;
+        }
+
+        .alternatives-title {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .alternatives-text {
+            font-size: 0.8rem;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        .bundle-card {
+            background: #252525;
+            border: 1px solid #FF9500;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .bundle-header {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .bundle-description {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .bundle-items {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .bundle-items li {
+            padding: 0.4rem 0;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .bundle-items li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #FF9500;
+            font-weight: bold;
+        }
+
+        .bundle-cta {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            border: 1px solid #a88734;
+            border-radius: 8px;
+            color: #111;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .bundle-cta:hover {
+            background: linear-gradient(to bottom, #f5d78e, #edb933);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 1rem;
+        }
+
+        .modal-content h3 {
+            color: #e0e0e0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.25rem;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        .modal-content button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            border: 1px solid #a88734;
+            border-radius: 8px;
+            color: #111;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background: linear-gradient(to bottom, #f5d78e, #edb933);
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .store-title {
+                font-size: 1.4rem;
+            }
+
+            .list-title {
+                font-size: 1.25rem;
+            }
+
+            .product-info {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="voice-bar" id="voiceBar">
+        <div class="voice-container">
+            <div class="mic-button">
+                <svg class="mic-icon" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </div>
+            <div class="voice-instructions">
+                <h3>Voice Search</h3>
+                <p>Click here and say: "Show me the mold stuff"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"cleaning supplies"</p>
+            </div>
+            <div class="voice-status" id="voiceStatus">Ready</div>
+        </div>
+    </div>
+
+    <div class="store-header">
+        <div class="store-header-content">
+            <h1 class="store-title">Tools That Work</h1>
+            <p class="store-subtitle">Curated products for detox, resilience, and reclaiming your health. Every item here is tested, vetted, and chosen for a reason.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="list-section" id="stack-mold" data-keywords="mold,toxic,detox,mycotoxin,biotoxin,binder">
+            <div class="list-header">
+                <h2 class="list-title">Mold & Biotoxin Detox</h2>
+                <p class="list-description">Clearing the load when your environment has made you sick</p>
+            </div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/61vJiT76NHL._AC_SL1000_.jpg" alt="ZeoBind Powder">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">BioPure ZeoBind Powder - 200 Grams</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(147)</span>
+                        </div>
+                        <p class="product-why">Clinoptilolite zeolite binder for mycotoxins and heavy metals. BioPure's micronized formula for maximum surface area. Take away from food and medications.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/BioPure-ZeoBind-Powder-200-Grams/dp/B015OVH9JO?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                            <div class="alternatives">
+                                <div class="alternatives-title">Consider also:</div>
+                                <div class="alternatives-text">Activated charcoal | Bentonite clay | Rotate binders with practitioner guidance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71VRzX+WDEL._AC_SL1500_.jpg" alt="ThermoPro Humidity Monitor">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">ThermoPro TP49 Digital Hygrometer</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(42,847)</span>
+                        </div>
+                        <p class="product-why">Prevention is cheaper than remediation. Keep humidity below 50% to prevent mold growth. This gives you real-time data with accurate readings.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/ThermoPro-TP49-Hygrometer-Thermometer-Temperature/dp/B07WCR5Y4B?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/61hPs+av4LL._AC_SL1200_.jpg" alt="RGF REME HALO">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">RGF REME HALO In-Duct Air Purifier</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(892)</span>
+                        </div>
+                        <p class="product-why">Whole-home air purification using ionized hydroperoxides. Neutralizes mold, bacteria, and VOCs throughout your HVAC system. Professional-grade solution.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Latest-RGF-Purifier-System-Ionizer/dp/B01JVEU1FO?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/41VNvQZfwNL._AC_.jpg" alt="RGF HALO-ROVE">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">RGF HALO-ROVE Portable Air Purifier - 1000 sq ft</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(34)</span>
+                        </div>
+                        <p class="product-why">Portable version of the HALO system. PHI-CELL technology for spaces up to 1000 sq ft. Plug-and-play solution when whole-home installation isn't an option.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Halo-Rove-Commercial-Portable-CAPS-MINI-16-CAPS-Mini/dp/B09GZP9L5H?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="list-section" id="stack-cleaning" data-keywords="clean,cleaning,toxic,chemical,safe,bleach,soap,detergent,laundry,ozone">
+            <div class="list-header">
+                <h2 class="list-title">Non-Toxic Cleaning</h2>
+                <p class="list-description">Clean your space without poisoning yourself</p>
+            </div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/61fV7YkF7QL._AC_SL1500_.jpg" alt="O3 Pure Eco Laundry">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">O3 Pure Eco Laundry Wash System - Professional</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(1,856)</span>
+                        </div>
+                        <p class="product-why">Eliminates laundry detergent entirely. Creates ozonated water that sanitizes and cleans without chemicals. Game-changer for chemical sensitivity.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/O3-Pure-Professional-Laundry-Washer/dp/B00AUWTYN2?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                            <div class="alternatives">
+                                <div class="alternatives-title">Consider also:</div>
+                                <div class="alternatives-text">EC3 Laundry Additive (for mold) available at microbalancehealth.com</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71xwndt3pwL._AC_SL1500_.jpg" alt="Fantasticlean Microfiber Cloths">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Fantasticlean Microfiber Cleaning Cloths - Grey 90 Pack</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(1,234)</span>
+                        </div>
+                        <p class="product-why">Traps dust and particles without chemicals. Reusable, effective, reduces your toxic load from aerosolized cleaners. Grey hides stains.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Fantasticlean-Microfiber-Cleaning-Reusable-Washable/dp/B0CSJJXZHB?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71rD7b-6PxL._AC_SL1500_.jpg" alt="Miele Complete C3 Calima">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Miele Complete C3 Calima Bagged Canister Vacuum with HEPA Filter</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(1,547)</span>
+                        </div>
+                        <p class="product-why">Regular vacuums blow fine particles back into your air. Miele's sealed HEPA system captures what matters. Essential for mold or allergies.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Miele-Complete-Calima-Canister-Vacuum-Corded/dp/B079MKPSZS?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/61lRXB+kBwL._AC_SL1500_.jpg" alt="Amazon Basics Hydrogen Peroxide">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Amazon Basics Hydrogen Peroxide 3% - 32 fl oz</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(8,247)</span>
+                        </div>
+                        <p class="product-why">Simple, cheap, effective. Dilute for mouth rinse, use on cuts, disinfect surfaces. No fancy branding needed—it's just hydrogen peroxide that works.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Amazon-Basics-Hydrogen-Peroxide-Solution/dp/B09HHDW53K?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="list-section" id="stack-sleep" data-keywords="sleep,nervous,system,rest,recovery,allergen,allergy,pillow,mattress,earplug">
+            <div class="list-header">
+                <h2 class="list-title">Sleep & Nervous System Support</h2>
+                <p class="list-description">Protect your recovery time and reduce environmental stressors</p>
+            </div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71QhxGG7gDL._AC_SL1500_.jpg" alt="AllerEase Pillow Protector">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">AllerEase Maximum Allergy Protection Pillow Protector</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(18,543)</span>
+                        </div>
+                        <p class="product-why">Blocks dust mites, allergens, and mold from your pillow. Breathable barrier that doesn't crinkle. Essential for anyone dealing with biotoxin illness.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/AllerEase-Maximum-Allergy-Protection-Protector/dp/B004RDQG9O?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71r7eH9oY+L._AC_SL1500_.jpg" alt="AllerEase Mattress Protector">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">AllerEase Maximum Allergy & Bed Bug Mattress Protector</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(31,287)</span>
+                        </div>
+                        <p class="product-why">Complete mattress protection from allergens and mold. Zippered encasement seals your mattress from all sides. Your bedroom is your sanctuary.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/AllerEase-Maximum-Allergy-Protection-Mattress/dp/B004RDR0NA?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71fN3hN5AFL._AC_SL1500_.jpg" alt="Mack's Ultra Soft Foam Earplugs">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Mack's Ultra Soft Foam Earplugs - 50 Pair</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count
