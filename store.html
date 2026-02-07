@@ -18,7 +18,63 @@
             line-height: 1.4;
         }
 
-        .voice-bar {
+        /* Site Navigation */
+        .site-nav {
+            background: #0a0a0a;
+            border-bottom: 1px solid #333;
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .site-nav-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .site-nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .site-nav-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .site-nav-links a:hover {
+            color: #FF9500;
+        }
+
+        .site-nav-links a.active {
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .site-nav-links {
+                gap: 1rem;
+            }
+            .site-nav-links a {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Voice Control Bar */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -151,7 +207,7 @@
             padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            scroll-margin-top: 120px;
+            scroll-margin-top: 145px;
         }
 
         .list-header {
@@ -198,7 +254,7 @@
         .product-image-container {
             width: 100%;
             aspect-ratio: 1;
-            background: #ffffff;
+            background: #f8f8f8;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -212,6 +268,31 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+        }
+
+        .product-image-container img[src=""],
+        .product-image-container img:not([src]) {
+            display: none;
+        }
+
+        .product-image-container::after {
+            content: attr(data-product-name);
+            position: absolute;
+            color: #999;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .product-image-container:has(img[src=""]),
+        .product-image-container:has(img:not([src])) {
+            background: #f0f0f0;
+        }
+
+        .product-image-container:has(img[src=""])::after,
+        .product-image-container:has(img:not([src]))::after {
+            display: block;
         }
 
         .image-placeholder {
@@ -447,6 +528,21 @@
     </style>
 </head>
 <body>
+    <!-- Site Navigation -->
+    <nav class="site-nav">
+        <div class="site-nav-container">
+            <a href="https://domorethansurvive.com/" class="site-logo">THRIVE WELLNESS</a>
+            <div class="site-nav-links">
+                <a href="https://domorethansurvive.com/#about">About Us</a>
+                <a href="https://domorethansurvive.com/thrive-guides">Buy Guides</a>
+                <a href="/store" class="active">Store</a>
+                <a href="https://domorethansurvive.com/#contact">Get Help</a>
+                <a href="https://domorethansurvive.com/#login">Log In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Voice Search Bar -->
     <div class="voice-bar" id="voiceBar">
         <div class="voice-container">
             <div class="mic-button">
@@ -457,7 +553,7 @@
             </div>
             <div class="voice-instructions">
                 <h3>Voice Search</h3>
-                <p>Click here and say: "Show me the mold stuff"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"cleaning supplies"</p>
+                <p>You can say "mold stuff", "cleaning supplies", or "sleep support"</p>
             </div>
             <div class="voice-status" id="voiceStatus">Ready</div>
         </div>
@@ -478,8 +574,8 @@
             </div>
             <div class="product-grid">
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/61vJiT76NHL._AC_SL1000_.jpg" alt="ZeoBind Powder">
+                    <div class="product-image-container" data-product-name="BioPure ZeoBind Powder">
+                        <div class="image-placeholder">ZeoBind Powder<br>200 Grams</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">BioPure ZeoBind Powder - 200 Grams</h3>
@@ -499,8 +595,25 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71VRzX+WDEL._AC_SL1500_.jpg" alt="ThermoPro Humidity Monitor">
+                    <div class="product-image-container" data-product-name="Go Raw Sprouted Pumpkin Seeds">
+                        <div class="image-placeholder">Go Raw<br>Sprouted Pumpkin Seeds</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Go Raw Organic Sprouted Pumpkin Seeds - 14 Oz</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(2,847)</span>
+                        </div>
+                        <p class="product-why">Sprouted for maximum nutrient absorption. 8g plant protein per serving, high in zinc and magnesium. Real food that supports detox pathways naturally.</p>
+                        <div class="product-actions">
+                            <a href="https://www.amazon.com/Go-Raw-Sprouted-Pumpkin-Seeds/dp/B008XS1WN0?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image-container" data-product-name="ThermoPro TP49">
+                        <div class="image-placeholder">ThermoPro<br>TP49 Hygrometer</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">ThermoPro TP49 Digital Hygrometer</h3>
@@ -516,8 +629,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/61hPs+av4LL._AC_SL1200_.jpg" alt="RGF REME HALO">
+                    <div class="product-image-container" data-product-name="RGF REME HALO">
+                        <div class="image-placeholder">RGF REME HALO<br>In-Duct Purifier</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">RGF REME HALO In-Duct Air Purifier</h3>
@@ -533,8 +646,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/41VNvQZfwNL._AC_.jpg" alt="RGF HALO-ROVE">
+                    <div class="product-image-container" data-product-name="RGF HALO-ROVE">
+                        <div class="image-placeholder">RGF HALO-ROVE<br>Portable Purifier</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">RGF HALO-ROVE Portable Air Purifier - 1000 sq ft</h3>
@@ -550,8 +663,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71MqJGvKiTL._AC_SL1500_.jpg" alt="SuperBeets Heart Chews">
+                    <div class="product-image-container" data-product-name="SuperBeets Heart Chews">
+                        <div class="image-placeholder">SuperBeets<br>Heart Chews</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">HumanN SuperBeets Heart Chews - Nitric Oxide Support - 60 Count</h3>
@@ -575,8 +688,8 @@
             </div>
             <div class="product-grid">
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/61fV7YkF7QL._AC_SL1500_.jpg" alt="O3 Pure Eco Laundry">
+                    <div class="product-image-container" data-product-name="O3 Pure Eco Laundry">
+                        <div class="image-placeholder">O3 Pure Eco<br>Laundry System</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">O3 Pure Eco Laundry Wash System - Professional</h3>
@@ -596,8 +709,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71xwndt3pwL._AC_SL1500_.jpg" alt="Fantasticlean Microfiber Cloths">
+                    <div class="product-image-container" data-product-name="Fantasticlean Microfiber">
+                        <div class="image-placeholder">Fantasticlean<br>Microfiber Cloths</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">Fantasticlean Microfiber Cleaning Cloths - Grey 90 Pack</h3>
@@ -613,8 +726,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71rD7b-6PxL._AC_SL1500_.jpg" alt="Miele Complete C3 Calima">
+                    <div class="product-image-container" data-product-name="Miele C3 Calima">
+                        <div class="image-placeholder">Miele Complete C3<br>HEPA Vacuum</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">Miele Complete C3 Calima Bagged Canister Vacuum with HEPA Filter</h3>
@@ -630,8 +743,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/61lRXB+kBwL._AC_SL1500_.jpg" alt="Amazon Basics Hydrogen Peroxide">
+                    <div class="product-image-container" data-product-name="Hydrogen Peroxide">
+                        <div class="image-placeholder">Amazon Basics<br>Hydrogen Peroxide 3%</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">Amazon Basics Hydrogen Peroxide 3% - 32 fl oz</h3>
@@ -655,8 +768,8 @@
             </div>
             <div class="product-grid">
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71QhxGG7gDL._AC_SL1500_.jpg" alt="AllerEase Pillow Protector">
+                    <div class="product-image-container" data-product-name="AllerEase Pillow">
+                        <div class="image-placeholder">AllerEase<br>Pillow Protector</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">AllerEase Maximum Allergy Protection Pillow Protector</h3>
@@ -672,8 +785,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71r7eH9oY+L._AC_SL1500_.jpg" alt="AllerEase Mattress Protector">
+                    <div class="product-image-container" data-product-name="AllerEase Mattress">
+                        <div class="image-placeholder">AllerEase<br>Mattress Protector</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">AllerEase Maximum Allergy & Bed Bug Mattress Protector</h3>
@@ -689,8 +802,8 @@
                 </div>
 
                 <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71fN3hN5AFL._AC_SL1500_.jpg" alt="Mack's Ultra Soft Foam Earplugs">
+                    <div class="product-image-container" data-product-name="Mack's Earplugs">
+                        <div class="image-placeholder">Mack's Ultra Soft<br>Foam Earplugs</div>
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">Mack's Ultra Soft Foam Earplugs - 50 Pair</h3>
