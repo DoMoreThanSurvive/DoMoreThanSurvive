@@ -12,16 +12,16 @@
         }
 
         body {
-            font-family: 'Amazon Ember', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
             background: #0a0a0a;
             color: #e0e0e0;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         /* Site Navigation */
         .site-nav {
             background: #0a0a0a;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #1a1a1a;
             padding: 1rem 1.5rem;
             position: sticky;
             top: 0;
@@ -53,8 +53,9 @@
         .site-nav-links a {
             color: #999;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: color 0.2s ease;
+            font-weight: 400;
         }
 
         .site-nav-links a:hover {
@@ -62,7 +63,7 @@
         }
 
         .site-nav-links a.active {
-            color: #e0e0e0;
+            color: #FF9500;
         }
 
         @media (max-width: 768px) {
@@ -172,10 +173,11 @@
         .voice-status.processing { color: #ffcc00; }
         .voice-status.error { color: #ff6b6b; }
 
+        /* Store Header */
         .store-header {
-            background: #1a1a1a;
-            padding: 1.5rem 1rem;
-            border-bottom: 1px solid #333;
+            background: #0a0a0a;
+            padding: 2.5rem 1rem;
+            border-bottom: 1px solid #1a1a1a;
         }
 
         .store-header-content {
@@ -184,15 +186,18 @@
         }
 
         .store-title {
-            font-size: 1.75rem;
+            font-size: 2rem;
             color: #e0e0e0;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .store-subtitle {
             color: #999;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 800px;
         }
 
         .container {
@@ -201,32 +206,34 @@
             padding: 1.5rem 1rem;
         }
 
+        /* List Section */
         .list-section {
-            background: #1a1a1a;
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            background: #0a0a0a;
+            margin-bottom: 2.5rem;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
             scroll-margin-top: 145px;
         }
 
         .list-header {
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #1a1a1a;
         }
 
         .list-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             color: #e0e0e0;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .list-description {
             color: #999;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         .product-grid {
@@ -297,23 +304,25 @@
 
         .image-placeholder {
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
+            line-height: 1.4;
         }
 
         .product-info {
-            padding: 1rem;
+            padding: 0.75rem;
             flex: 1;
             display: flex;
             flex-direction: column;
+            background: #fff;
         }
 
         .product-title {
-            font-size: 0.95rem;
-            color: #e0e0e0;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-size: 0.875rem;
+            color: #0F1111;
+            margin-bottom: 0.35rem;
+            font-weight: 400;
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -324,22 +333,22 @@
         .product-rating {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.3rem;
             margin-bottom: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .stars {
-            color: #ff9900;
+            color: #FFA41C;
         }
 
         .rating-count {
-            color: #FF9500;
+            color: #007185;
         }
 
         .product-why {
-            color: #999;
-            font-size: 0.85rem;
+            color: #565959;
+            font-size: 0.8rem;
             margin-bottom: 0.75rem;
             line-height: 1.4;
             flex: 1;
@@ -454,6 +463,7 @@
             background: linear-gradient(to bottom, #f5d78e, #edb933);
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -461,7 +471,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 2000;
             align-items: center;
             justify-content: center;
@@ -472,23 +482,23 @@
         }
 
         .modal-content {
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: #fff;
+            border: 1px solid #ddd;
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 8px;
             max-width: 500px;
             margin: 1rem;
         }
 
         .modal-content h3 {
-            color: #e0e0e0;
+            color: #0F1111;
             margin-bottom: 1rem;
             font-size: 1.3rem;
         }
 
         .modal-content p {
             margin-bottom: 1.25rem;
-            color: #999;
+            color: #565959;
             line-height: 1.5;
         }
 
@@ -509,20 +519,20 @@
 
         @media (max-width: 768px) {
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
                 gap: 0.75rem;
             }
 
             .store-title {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
 
             .list-title {
-                font-size: 1.25rem;
+                font-size: 1.4rem;
             }
 
             .product-info {
-                padding: 0.75rem;
+                padding: 0.65rem;
             }
         }
     </style>
@@ -796,7 +806,7 @@
                         </div>
                         <p class="product-why">Blocks dust mites, allergens, and mold from your pillow. Breathable barrier that doesn't crinkle. Essential for anyone dealing with biotoxin illness.</p>
                         <div class="product-actions">
-                            <a href="https://www.amazon.com/AllerEase-Maximum-Allergy-Protection-Protector/dp/B004RDQG9O?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                            <a href="https://www.amazon.com/AllerEase-Maximum-Pillow-Protector-King/dp/B07J9LQ8JK?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
                         </div>
                     </div>
                 </div>
@@ -813,7 +823,7 @@
                         </div>
                         <p class="product-why">Complete mattress protection from allergens and mold. Zippered encasement seals your mattress from all sides. Your bedroom is your sanctuary.</p>
                         <div class="product-actions">
-                            <a href="https://www.amazon.com/AllerEase-Maximum-Allergy-Protection-Mattress/dp/B004RDR0NA?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
+                            <a href="https://www.amazon.com/AllerEase-Waterproof-Mattress-Protector-Maximum/dp/B00MZNCKL2?tag=domorethansur-20" target="_blank" rel="noopener noreferrer" class="add-to-cart-btn">View on Amazon</a>
                         </div>
                     </div>
                 </div>
